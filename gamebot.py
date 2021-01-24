@@ -42,10 +42,6 @@ async def reset(ctx):
 
 @client.command()
 async def start(ctx):
-    #bot joining a voice channel, but not gonna use it
-    #connected = ctx.author.voice
-    #if connected:
-    #    await connected.channel.connect()
     global mems
     global dict
     global inputs
@@ -54,9 +50,6 @@ async def start(ctx):
     channel = discord.utils.get(ctx.guild.voice_channels, name='General')
     channel_id = channel.id
     print(channel_id)
-    #channel = ctx.guild.get_channel(channel_id) #gets the channel you want to get the list from
-    #print(channel.name)
-    #members = channel.members #finds members connected to the channel
     memids = [] #(list) of member ids
     for key in channel.voice_states.keys():#members:
         mems.append(key)
@@ -72,8 +65,7 @@ async def start(ctx):
     else:
         elist = []
         num = len(memids)
-        count = 0 #not sure why this is here
-        #this will later be random choice of word
+        # the choice can be more than 2, but for now i have 2 per list
         wordlist_f = ['kimchi',
                         'steak',
                         'spaghetti']
@@ -107,9 +99,7 @@ async def start(ctx):
                 count += 1
                 # sending dm
                 user = await client.fetch_user(uid)
-                #user = client.get_user(uid) #new way to get a user. replacing the previous ones for all future user
                 print(user)
-                #user = get(client.get_all_members(), id = uid)
                 if user:
                     await user.send(f"You are a Citizen. The word is: {word}")
                 else:
@@ -123,7 +113,6 @@ async def start(ctx):
                     count += 1
                     # sending dm
                     user = client.get_user(uid)
-                    #user = get(client.get_all_members(), id = uid)
                     if user:
                         await user.send(f"You are a Citizen. The word is: {word}")
                     else:
@@ -143,8 +132,6 @@ async def start(ctx):
                 count += 1
                 # sending dm
                 user = await client.fetch_user(uid)
-                #user = client.get_user(uid)
-                #user = get(client.get_all_members(), id = uid)
                 print(user)
                 if user:
                     await user.send("You are the Liar. Try to fit in.")
@@ -177,7 +164,6 @@ async def done(ctx):
     #sends out options to vote
     for uid in range(len(mems)):
         user = client.get_user(mems[uid])
-        #user = get(client.get_all_members(), id = mems[uid])
         if user:
             await ctx.send(f"Option{uid + 1}: {user.name}")
             inputs.update({user.name : 0})
@@ -185,9 +171,6 @@ async def done(ctx):
             await ctx.send("Oops, error occurred. Ending the program.")
             return
     await ctx.send('Type in corresponding option number of the suspect (1,2,3...) to vote. Anything else will be ignored.')
-    # we do not want the bot to reply to itself
-    #if question.author.id == self.user.id:
-    #    return
 
     def cformat(m):
         if m.content.isdigit() and m.author.id not in vlist\
@@ -199,7 +182,6 @@ async def done(ctx):
     for uid in mems:
         mes = await client.wait_for('message', check = cformat)
         user = client.get_user(mems[int(mes.content, base = 10) - 1])
-        #user = get(client.get_all_members(), id = mems[int(mes.content, base = 10)])
         if user:
             inputs.update({user.name: inputs[user.name] + 1})
         else:
@@ -207,11 +189,9 @@ async def done(ctx):
             return
 
     winner = client.get_user(mems[0])
-    #winner = get(client.get_all_members(), id = mems[0])
     winner_id = mems[0]
     for x in range(1,len(inputs)):
         user = client.get_user(mems[x])
-        #user = get(client.get_all_members(), id = mems[x])
         if user:
             if inputs[user.name] > inputs[winner.name]:
                 winner = user
