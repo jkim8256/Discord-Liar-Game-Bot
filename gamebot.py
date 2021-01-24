@@ -241,4 +241,4 @@ async def done(ctx):
                 await ctx.send(f"Liar won! The liar was {user.name}")
                 return
 
-client.run('bot token')
+client.run('put your bot token here')
