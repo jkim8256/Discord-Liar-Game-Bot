@@ -8,8 +8,9 @@ import nacl
 
 intents = discord.Intents.default()
 intents.members = True
+intents.message_content = True
 
-client = commands.Bot(command_prefix = '!')
+client = commands.Bot(intents=intents, command_prefix = "!")
 mems = []
 dict = {} #id : word. search id to get word
 inputs = {} # name : votes
@@ -42,6 +43,7 @@ async def reset(ctx):
 
 @client.command()
 async def start(ctx):
+    print("Game starting")
     global mems
     global dict
     global inputs
@@ -221,4 +223,4 @@ async def done(ctx):
                 await ctx.send(f"Liar won! The liar was {user.name}")
                 return
 
-client.run('put your bot token here')
+client.run("Put your bot token here")
